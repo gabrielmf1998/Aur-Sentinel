@@ -1,89 +1,269 @@
-# Aur Sentinel
+````markdown
+![Aur Sentinel](https://i.ibb.co/Ng3PHPp2/image.png)
 
-Aur Sentinel é uma ferramenta Qt/KDE simples para auditar pacotes AUR antes do `makepkg`.
+## Requisitos 🚨
 
-O fluxo principal é intencionalmente curto:
+O **Aur Sentinel** parte do princípio de que você já utiliza Arch Linux ou uma distribuição compatível com pacotes AUR.
 
-```text
-Buscar pacote -> Selecionar resultado -> Auditar -> Instalar somente se estiver OK
-```
+Ele foi pensado principalmente para usuários de Arch Linux com ambiente gráfico KDE/Plasma, mas pode funcionar em outros ambientes desde que as dependências necessárias estejam instaladas.
 
-O objetivo é responder uma pergunta prática:
+Dependências esperadas:
 
-```text
-Este pacote AUR tem sinais compatíveis com os incidentes AUR conhecidos?
-```
+- Arch Linux ou sistema compatível com `pacman`
+- `git`
+- `base-devel`
+- `makepkg`
+- `pacman`
+- `bsdtar`
+- `file`
+- Qt/KDE conforme o pacote instalado exigir
 
-## O que o app faz
+O Aur Sentinel **não substitui o pacman**, **não substitui o makepkg** e **não é um helper AUR tradicional**.
 
-- busca pacotes pela AUR RPC API;
-- mostra versão, descrição, votos, popularidade, mantenedor e metadados do pacote selecionado;
-- clona `https://aur.archlinux.org/<pacote>.git` em `~/Downloads`;
-- lista os arquivos versionados;
-- coleta os últimos commits;
-- coleta o diff do último commit;
-- resume os campos principais do `PKGBUILD`;
-- bloqueia padrões compatíveis com incidentes AUR documentados antes de qualquer `makepkg`;
-- bloqueia arquivos versionados sensíveis como `*.install`, units systemd, hooks, regras udev, polkit e sudoers;
-- se não houver bloqueio inicial, executa `makepkg --verifysource` e `makepkg -sr`;
-- localiza pacotes finais `*.pkg.tar.zst`;
-- inspeciona metadados com `pacman -Qip`;
-- lista arquivos instalados com `pacman -Qlp`;
-- bloqueia Install Script, caminhos sensíveis, setuid, setgid e Linux capabilities.
-- permite instalar somente os `*.pkg.tar.zst` gerados pela auditoria atual quando o status é `OK — pode instalar`.
+Ele é uma ferramenta visual para auditar pacotes AUR antes da instalação.
 
-## O que o app não faz
+## Como utilizar❓
 
-- não chama helper AUR;
-- não chama `yay`, `paru`, `octopi` ou ferramentas similares;
-- não roda `makepkg` novamente na hora de instalar;
-- não instala se a auditoria terminou vermelha ou amarela;
-- não pergunta para continuar depois de um bloqueio.
+Baixe o pacote `.pacman` mais recente na página de releases e instale com:
 
-## Estados
-
-**OK — pode instalar**
-
-Nenhum padrão compatível com incidentes AUR documentados foi encontrado. O pacote foi validado, compilado sem instalar e o conteúdo final foi inspecionado.
-
-**INSEGURO — revisão manual necessária**
-
-Foram encontrados padrões compatíveis com incidentes AUR documentados. Não execute `makepkg` antes de revisar manualmente ou enviar o relatório para análise com IA.
-
-**Erro na auditoria**
-
-A auditoria não foi concluída por erro operacional, dependência ausente ou falha de build. Isso não classifica o pacote como seguro nem inseguro.
-
-## Copiar para IA
-
-O botão `Copiar para IA` copia um relatório Markdown completo com:
-
-- pacote, data/hora e diretório de trabalho;
-- resultado final e motivo;
-- padrões e arquivos sensíveis encontrados;
-- metadados do pacote AUR;
-- últimos commits;
-- diff do último commit;
-- campos principais do `PKGBUILD`;
-- saída de `makepkg --verifysource`, se executado;
-- saída de `makepkg -sr`, se executado;
-- saída de `pacman -Qip` e `pacman -Qlp`, se executadas;
-- checks de Install Script, paths sensíveis, setuid/setgid e capabilities.
-
-## Instalação
-
-O botão `Instalar` fica desabilitado até a auditoria atual terminar em `OK — pode instalar`.
-
-Quando habilitado, ele instala apenas os arquivos `*.pkg.tar.zst` criados no diretório daquela auditoria usando `pacman -U` via `pkexec`, `kdesu` ou `kdesudo`. O app não usa helper AUR e não recompila o pacote nessa etapa.
-
-## Executar
+- Terminal: 🚀
 
 ```bash
-python main.py
-```
+sudo pacman -U aursentinel-*.pacman
+````
 
-## Testes
+Também é possível instalar o pacote no formato padrão do Arch:
 
 ```bash
-pytest
+sudo pacman -U aursentinel-*.pkg.tar.zst
+```
+
+Depois de instalado, abra pelo menu do KDE ou pelo terminal:
+
+```bash
+aursentinel
+```
+
+## Porque foi criado❓
+
+Com cada vez mais usuários usando Arch Linux, também cresce o uso do AUR. O AUR é uma das maiores forças do Arch, mas exige atenção: os pacotes são mantidos pela comunidade e o usuário deve revisar o que será executado antes de instalar.
+
+Foi assim que nasceu o **Aur Sentinel**.
+
+O projeto foi criado para ajudar usuários de Arch Linux a usar o AUR com mais clareza, menos medo e mais controle. A ideia não é assustar o usuário, nem dizer que todo pacote AUR é perigoso. A ideia é mostrar, de forma visual e simples, se um pacote apresenta padrões parecidos com incidentes AUR já documentados.
+
+O Aur Sentinel não tenta substituir o conhecimento técnico. Ele tenta organizar a análise inicial para que o usuário veja, de forma clara, o que está acontecendo antes de rodar `makepkg`.
+
+## O que ele consegue fazer❓
+
+Logo na tela inicial, o Aur Sentinel permite buscar pacotes AUR, selecionar um pacote e iniciar uma auditoria visual.
+
+Durante a auditoria, ele executa uma sequência de verificações antes de permitir qualquer instalação:
+
+* clona o repositório AUR do pacote na pasta Downloads
+* lista os arquivos versionados do pacote
+* mostra os últimos commits
+* mostra o diff do último commit
+* analisa o PKGBUILD
+* procura padrões compatíveis com incidentes AUR documentados
+* detecta uso suspeito de `.install`
+* detecta comandos como `curl`, `wget`, `npm`, `bun`, `node`, `systemctl`, `setcap`, `dkms` e outros padrões sensíveis
+* bloqueia antes do `makepkg` se encontrar algo compatível com incidentes conhecidos
+* valida fontes e checksums
+* compila o pacote sem instalar
+* inspeciona o pacote final
+* verifica se existe `Install Script`
+* verifica caminhos sensíveis como systemd, udev, polkit, sudoers, cron e módulos do kernel
+* verifica setuid, setgid e Linux capabilities
+* gera um relatório completo para copiar e enviar para análise com IA
+
+O resultado é apresentado de forma simples:
+
+* 🟢 **OK — pode instalar**
+* 🔴 **INSEGURO — revisão manual necessária**
+* 🟡 **Erro na auditoria**
+
+## Do que ele protege❓
+
+O Aur Sentinel foi criado com foco em padrões usados em incidentes AUR já documentados.
+
+Ele verifica sinais compatíveis com casos como:
+
+* **2018**: pacotes AUR com execução remota via `curl | bash` e download de scripts externos
+* **2025**: pacotes como `librewolf-fix-bin`, `firefox-patch-bin` e `zen-browser-patched-bin`, associados a scripts remotos/RAT
+* **2026**: campanhas com adoção maliciosa de pacotes órfãos e uso de `npm`, `atomic-lockfile`, `lockfile-js` e `js-digest`
+* **2026**: nova onda usando `bun`, `execa`, `commander` e padrões similares
+
+Ele também verifica elementos sensíveis como:
+
+* `.install`
+* hooks de instalação
+* `systemd`
+* `udev`
+* `polkit`
+* `sudoers`
+* `dkms`
+* `setcap`
+* `Install Script`
+* setuid/setgid
+* Linux capabilities
+* caminhos sensíveis no pacote final
+
+## Como ele verifica❓
+
+O Aur Sentinel segue um fluxo **fail-closed**.
+
+Isso significa que, se algo sensível for encontrado, ele para antes de executar `makepkg`.
+
+O fluxo básico é:
+
+1. o usuário busca um pacote AUR
+2. o pacote é clonado na pasta Downloads
+3. os arquivos do repositório são analisados
+4. os commits recentes são exibidos
+5. o último diff é inspecionado
+6. o PKGBUILD é analisado
+7. padrões sensíveis são procurados
+8. se algo for encontrado, a auditoria é bloqueada
+9. se nada for encontrado, as fontes são validadas
+10. o pacote é compilado sem instalar
+11. o pacote final é inspecionado
+12. o resultado é exibido de forma clara
+
+Se tudo estiver limpo, o Aur Sentinel mostra:
+
+```text
+OK — pode instalar
+```
+
+Se encontrar algo sensível, ele mostra:
+
+```text
+INSEGURO — revisão manual necessária
+```
+
+Se houver falha de rede, pacote inexistente, dependência ausente ou erro de build, ele mostra:
+
+```text
+Erro na auditoria
+```
+
+## O que significa OK — pode instalar❓
+
+Quando o Aur Sentinel mostra **OK — pode instalar**, significa que o pacote passou pelo filtro contra padrões usados em incidentes AUR conhecidos.
+
+Isso quer dizer que:
+
+* nenhum padrão sensível foi encontrado nos arquivos versionados
+* nenhum arquivo sensível foi encontrado no repositório AUR
+* as fontes/checksums foram validadas
+* o pacote compilou sem instalar
+* o pacote final foi localizado
+* o pacote final não possui `Install Script`
+* o pacote não instala em caminhos sensíveis
+* o pacote não possui setuid/setgid
+* o pacote não possui Linux capabilities
+
+Isso não é uma auditoria completa do código upstream, mas é uma validação prática contra os vetores AUR conhecidos.
+
+## O que significa INSEGURO — revisão manual necessária❓
+
+Quando o Aur Sentinel mostra **INSEGURO — revisão manual necessária**, significa que foi encontrado algum padrão compatível com incidentes AUR documentados.
+
+Exemplos:
+
+* uso de `curl` ou `wget`
+* uso de `npm`, `bun`, `node`, `npx`, `pnpm` ou `yarn`
+* uso de `.install`
+* uso de `systemctl`
+* uso de `setcap`
+* instalação em caminhos sensíveis
+* presença de `sudoers`, `polkit`, `udev`, `dkms`
+* `SKIP` em checksums
+* comandos como `bash -c`, `sh -c`, `eval`, `base64`
+* arquivos com setuid/setgid
+* capabilities no pacote final
+
+Isso não significa automaticamente que o pacote é malware. Significa que o pacote precisa de revisão manual antes de qualquer instalação.
+
+## Copiar para IA 🤖
+
+O Aur Sentinel possui a função **Copiar para IA**.
+
+Ela gera um relatório técnico em Markdown contendo:
+
+* nome do pacote
+* data e hora da auditoria
+* diretório de trabalho
+* status final
+* motivo da decisão
+* padrões encontrados
+* arquivos sensíveis encontrados
+* histórico recente
+* diff do último commit
+* resumo do PKGBUILD
+* saída do `makepkg --verifysource`
+* saída do `makepkg -sr`
+* metadados do pacote final
+* arquivos que seriam instalados
+* checks finais
+* conclusão
+
+A ideia é permitir que o usuário cole o relatório em uma IA ou envie para alguém mais experiente analisar.
+
+## Por que Arch❓
+
+O foco principal é Arch Linux porque o Arch representa liberdade, controle e aprendizado.
+
+O AUR é parte importante desse ecossistema, mas também exige responsabilidade. O Aur Sentinel existe para reduzir a barreira de entrada e ajudar o usuário a usar o AUR de forma mais consciente.
+
+Ele não tenta tirar o controle do usuário. Pelo contrário: ele mostra o que será analisado, onde o pacote foi baixado, quais comandos seriam executados e por que um pacote foi aprovado ou bloqueado.
+
+O objetivo é simples:
+
+```text
+usar AUR com mais clareza, menos medo e mais controle
+```
+
+## O que o Aur Sentinel não faz❓
+
+O Aur Sentinel não promete segurança absoluta.
+
+Ele não garante que:
+
+* o código upstream é 100% seguro
+* não existe backdoor sofisticado no código-fonte
+* o maintainer upstream nunca será comprometido
+* todo pacote AUR aprovado é perfeito
+* toda falha futura será detectada automaticamente
+
+O que ele faz é bloquear padrões compatíveis com incidentes AUR conhecidos e entregar uma análise inicial clara antes da instalação.
+
+## Filosofia do projeto 🛡️
+
+O Aur Sentinel foi criado com uma ideia simples:
+
+```text
+AUR não precisa ser usado no escuro.
+```
+
+O usuário não deve instalar pacotes com medo, mas também não deve instalar sem entender nada.
+
+O Aur Sentinel tenta ficar no meio termo:
+
+* simples para iniciantes
+* claro para usuários intermediários
+* útil para quem quer revisar pacotes rapidamente
+* conservador quando encontra padrões perigosos
+* transparente sobre o que foi analisado
+
+Se estiver tudo certo, ele mostra verde.
+
+Se precisar revisar, ele mostra vermelho.
+
+Se algo falhar, ele mostra erro operacional.
+
+Sem pânico. Sem enrolação. Sem esconder comandos.
+
+```
 ```
