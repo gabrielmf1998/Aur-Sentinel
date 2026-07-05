@@ -240,9 +240,7 @@ O que ele faz é bloquear padrões compatíveis com incidentes AUR conhecidos e 
 
 O Aur Sentinel foi criado com uma ideia simples:
 
-```text
-AUR não precisa ser usado no escuro.
-```
+**AUR não precisa ser usado no escuro.**
 
 O usuário não deve instalar pacotes com medo, mas também não deve instalar sem entender nada.
 
@@ -259,8 +257,6 @@ Se estiver tudo certo, ele mostra verde.
 Se precisar revisar, ele mostra vermelho.
 
 Se algo falhar, ele mostra erro operacional.
-
-Sem pânico. Sem enrolação. Sem esconder comandos.
 
 ```
 ```
