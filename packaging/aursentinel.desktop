@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Aur Sentinel
+Name[pt_BR]=Aur Sentinel
+Comment=AUR audit before makepkg
+Comment[pt_BR]=Auditoria AUR antes do makepkg
+Exec=aursentinel
+Icon=security-high
+Terminal=false
+Categories=Utility;Security;
+StartupNotify=true

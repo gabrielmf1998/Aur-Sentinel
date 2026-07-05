@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "description": "Local, editable indicators for known supply-chain campaigns. Matching an indicator is a review trigger, not a standalone proof of compromise.",
+  "indicators": [
+    {
+      "value": "atomic-lockfile",
+      "type": "npm_package",
+      "campaign": "Atomic Arch",
+      "reference": "https://www.sonatype.com/blog/atomic-arch-npm-campaign-adds-malicious-dependency"
+    },
+    {
+      "value": "js-digest",
+      "type": "npm_package",
+      "campaign": "Atomic Arch",
+      "reference": "https://www.sonatype.com/blog/atomic-arch-npm-campaign-adds-malicious-dependency"
+    },
+    {
+      "value": "lockfile-js",
+      "type": "npm_package",
+      "campaign": "Atomic Arch",
+      "reference": "https://www.sonatype.com/blog/atomic-arch-npm-campaign-adds-malicious-dependency"
+    }
+  ]
+}

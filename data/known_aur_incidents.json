@@ -1,0 +1,92 @@
+{
+  "incidents": [
+    {
+      "id": "aur_2018_acroread_balz_minergate",
+      "year": 2018,
+      "name": "AUR 2018 acroread/balz/minergate",
+      "summary": "Pacotes AUR comprometidos após adoção de pacotes órfãos; uso de curl | bash, payload remoto, coleta de informações e persistência.",
+      "critical_behaviors": [
+        "remote_shell_execution",
+        "systemd_persistence",
+        "pastebin_payload",
+        "system_info_exfiltration"
+      ],
+      "indicators": [
+        "ptpb.pw"
+      ],
+      "references": [
+        "https://lists.archlinux.org/pipermail/aur-general/2018-July/034169.html",
+        "https://thehackernews.com/2018/07/arch-linux-aur-malware.html",
+        "https://www.theregister.com/security/2018/07/11/arch-linux-pdf-reader-package-poisoned/1265885"
+      ]
+    },
+    {
+      "id": "aur_2025_chaos_rat_browser_patch",
+      "year": 2025,
+      "name": "AUR 2025 fake browser patch packages / CHAOS RAT",
+      "summary": "Pacotes de browser com nomes de patch/fix usaram source externo suspeito e instalaram RAT.",
+      "affected_packages": [
+        "librewolf-fix-bin",
+        "firefox-patch-bin",
+        "zen-browser-patched-bin"
+      ],
+      "critical_behaviors": [
+        "unofficial_browser_patch_source",
+        "unexpected_remote_script",
+        "rat_payload",
+        "unexpected_executable_payload"
+      ],
+      "indicators": [
+        "systemd-initd",
+        "zenbrowser-patch",
+        "CHAOS"
+      ],
+      "references": [
+        "https://lists.archlinux.org/archives/list/aur-general%40lists.archlinux.org/thread/7EZTJXLIAQLARQNTMEW2HBWZYE626IFJ/",
+        "https://linuxsecurity.com/features/chaos-rat-in-aur"
+      ]
+    },
+    {
+      "id": "aur_2026_atomic_arch",
+      "year": 2026,
+      "name": "AUR 2026 Atomic Arch npm/Bun dependency campaign",
+      "summary": "Adoções/atualizações maliciosas em massa; uso de npm/Bun para instalar dependências maliciosas externas ao AUR.",
+      "critical_behaviors": [
+        "npm_install_in_install_script",
+        "bun_install_in_install_script",
+        "malicious_dependency_manager_payload",
+        "node_lifecycle_binary_payload",
+        "credential_stealing"
+      ],
+      "indicators": [
+        "atomic-lockfile",
+        "js-digest",
+        "lockfile-js"
+      ],
+      "references": [
+        "https://archlinux.org/news/active-aur-malicious-packages-incident/",
+        "https://www.sonatype.com/blog/atomic-arch-npm-campaign-adds-malicious-dependency",
+        "https://thehackernews.com/2026/06/over-400-arch-linux-aur-packages.html"
+      ]
+    },
+    {
+      "id": "aur_2026_shell_profile_spam",
+      "year": 2026,
+      "name": "AUR 2026 shell profile modification/spam",
+      "summary": "Abuso de post_install para modificar .bashrc, .zshrc e config do Fish.",
+      "critical_behaviors": [
+        "shell_profile_modification",
+        "post_install_profile_write"
+      ],
+      "indicators": [
+        ".bashrc",
+        ".zshrc",
+        ".profile",
+        "config.fish"
+      ],
+      "references": [
+        "https://www.phoronix.com/news/Arch-Linux-AUR-Russian-Spam"
+      ]
+    }
+  ]
+}

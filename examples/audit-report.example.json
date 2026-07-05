@@ -1,0 +1,54 @@
+{
+  "package": "example",
+  "verdict": "OK_INSTALL",
+  "label": "OK — PODE INSTALAR",
+  "color": "green",
+  "summary": "Nenhum comportamento nocivo ou padrão de falha AUR documentada foi encontrado na auditoria.",
+  "subtext": "Nenhum comportamento nocivo ou padrão de falha AUR documentada foi encontrado na auditoria.",
+  "disclaimer": "Isso não garante segurança absoluta; indica apenas baixo risco observado.",
+  "audit_completed": true,
+  "audit_partial": false,
+  "analyzed": {
+    "pkgbuild": true,
+    "srcinfo": true,
+    "install_scripts": true,
+    "git_history": true,
+    "sources": true,
+    "archives": true,
+    "scripts": true,
+    "binaries": true,
+    "checksums": true,
+    "pgp": false
+  },
+  "analysis_status": {
+    "pkgbuild": "analisado",
+    "srcinfo": "analisado",
+    "install_scripts": "não existe",
+    "git_history": "analisado",
+    "sources": "verificados",
+    "archives": "extraídos/analisados",
+    "scripts": "analisados",
+    "binaries": "não encontrados",
+    "checksums": "OK",
+    "pgp": "não disponível"
+  },
+  "critical_evidence": [],
+  "suspicious_evidence": [],
+  "observations": [
+    {
+      "kind": "observation",
+      "title": "GitHub upstream",
+      "file_path": "AUR metadata",
+      "line_start": null,
+      "line_end": null,
+      "snippet": "https://github.com/example/example",
+      "behavior": "Pacote usa GitHub upstream.",
+      "explanation": "GitHub é comum em projetos AUR e não indica risco por si só.",
+      "recommendation": "Nenhuma ação necessária sem evidência concreta adicional.",
+      "related_incident_id": null,
+      "related_incident_name": null,
+      "references": []
+    }
+  ],
+  "info": []
+}
