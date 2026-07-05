@@ -1,9 +1,6 @@
-````markdown
-![Aur Sentinel](https://i.ibb.co/Ng3PHPp2/image.png)
-
 ## Requisitos 🚨
 
-O **Aur Sentinel** parte do princípio de que você já utiliza Arch Linux ou uma distribuição compatível com pacotes AUR.
+O **Aur Sentinel** parte do princípio de que você já utiliza Arch Linux e tem YAY instalado, ou uma distribuição compatível com pacotes AUR.
 
 Ele foi pensado principalmente para usuários de Arch Linux com ambiente gráfico KDE/Plasma, mas pode funcionar em outros ambientes desde que as dependências necessárias estejam instaladas.
 
